@@ -12,8 +12,8 @@ using namespace std::chrono;
 
 using container = std::vector<int>;
 
-const size_t ELEMENTS_PER_PROCESS = 100000;
-// const size_t ELEMENTS_PER_PROCESS = 500;
+//const size_t ELEMENTS_PER_PROCESS = 100000;
+const size_t ELEMENTS_PER_PROCESS = 10000;
 
 const int ROOT_RANK = 0;
 
