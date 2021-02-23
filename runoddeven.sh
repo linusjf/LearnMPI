@@ -4,13 +4,13 @@
 
 #Script Used for compiling and running openmpi programs
 clear
-source_file_name="./odd-even-MPI.c"
-output_file_name="./pgm"
+source_file_name="./odd_even.cpp"
+output_file_name="./oddeven"
 no_of_process=5
 
 echo ---------Compiling Program------------
 
-mpicc $source_file_name  -o $output_file_name -std=c99 -Wall
+mpic++ $source_file_name  -o $output_file_name -Wall
 if [ $? == 0 ];then #No Errors Detected
 	echo "COMPILE SUCCESS"
 	echo ---------Executing Program------------
