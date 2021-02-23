@@ -5,7 +5,7 @@
 #Script Used for compiling and running openmpi programs
 clear
 source_file_name="./odd-even-MPI.c"
-output_file_name="./pgm"
+output_file_name="./pgm.exe"
 no_of_process=5
 
 echo ---------Compiling Program------------

@@ -5,7 +5,7 @@
 #Script Used for compiling and running openmpi programs
 clear
 source_file_name="./pp_lab3.cpp"
-output_file_name="./prgm"
+output_file_name="./prgm.exe"
 no_of_process=5
 
 echo ---------Compiling Program------------

@@ -5,7 +5,7 @@
 #Script Used for compiling and running openmpi programs
 clear
 source_file_name="./odd_even.cpp"
-output_file_name="./oddeven"
+output_file_name="./oddeven.exe"
 no_of_process=5
 
 echo ---------Compiling Program------------
