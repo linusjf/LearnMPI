@@ -12,7 +12,6 @@ using namespace std::chrono;
 
 using container = std::vector<int>;
 
-//const size_t ELEMENTS_PER_PROCESS = 100000;
 const size_t ELEMENTS_PER_PROCESS = 10000;
 
 const int ROOT_RANK = 0;
@@ -26,7 +25,7 @@ container generate_array(size_t size)
    return c;
 }
 
-void sequential_sort(container arrayToSort)
+void sequential_sort(container &arrayToSort)
 {
   int size = arrayToSort.size();
     int sorted = 0;
@@ -85,7 +84,7 @@ void compare_split_min(int cmp_proc_id, container& sub_array)
     MPI_Send(&sub_array[0], sub_array.size(), MPI_INT, 
              cmp_proc_id, 0, MPI_COMM_WORLD);
     
-    // std::cout << "#" << proc_id << " wait for array from " << cmp_proc_id << std::endl;
+   // std::cout << "#" << proc_id << " wait for array from " << cmp_proc_id << std::endl;
 
     MPI_Recv(&other_sub_array[0], other_sub_array.size(), MPI_INT, 
              cmp_proc_id, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -95,15 +94,11 @@ void compare_split_min(int cmp_proc_id, container& sub_array)
     container merged;
     merged.reserve(sub_array.size() + other_sub_array.size());
 
-//    std::merge( sub_array.begin(), sub_array.end(), 
-  //              other_sub_array.begin(), other_sub_array.end(), 
-    //            std::back_inserter(merged));
-
-    std::set_union(sub_array.begin(), 
-        sub_array.end(), 
-        other_sub_array.begin(), 
-        other_sub_array.end(), 
-        merged.begin());
+    // concatenate the vectors
+    merged.insert(merged.end(),sub_array.begin(),
+        sub_array.end());
+    merged.insert(merged.end(),other_sub_array.begin(),
+        other_sub_array.end());
 
     sequential_sort(merged);
 
@@ -125,7 +120,7 @@ void compare_split_max(int cmp_proc_id, container& sub_array)
 
     container other_sub_array(ELEMENTS_PER_PROCESS);
 
-    // std::cout << "#" << proc_id << " wait for array from " << cmp_proc_id << std::endl;
+   // std::cout << "#" << proc_id << " wait for array from " << cmp_proc_id << std::endl;
     //get another process array. 
     //Lesser is always initiator of exchange 
     MPI_Recv(&other_sub_array[0], other_sub_array.size(), MPI_INT, 
@@ -144,11 +139,11 @@ void compare_split_max(int cmp_proc_id, container& sub_array)
     //std::merge( sub_array.begin(), sub_array.end(),
       //          other_sub_array.begin(), other_sub_array.end(), 
         //        std::back_inserter(merged));
-    std::set_union(sub_array.begin(), 
-        sub_array.end(), 
-        other_sub_array.begin(), 
-        other_sub_array.end(), 
-        merged.begin());
+    // concatenate the two vectors
+    merged.insert(merged.end(),sub_array.begin(),
+        sub_array.end());
+    merged.insert(merged.end(),other_sub_array.begin(),
+        other_sub_array.end());
 
     sequential_sort(merged);
 
@@ -178,7 +173,8 @@ int main(int argc, char** argv) {
         //array = std::move(generate_array(ELEMENTS_PER_PROCESS * world_size));
         array = generate_array(ELEMENTS_PER_PROCESS * world_size);
         array_copy = array;
-        // std::cout << array_to_string(array) << std::endl;
+        std::cout << "Original array" << std::endl;
+        std::cout << array_to_string(array) << std::endl;
     }
 
     auto start_time = std::chrono::high_resolution_clock::now();
@@ -189,11 +185,11 @@ int main(int argc, char** argv) {
     MPI_Scatter(&array[0], ELEMENTS_PER_PROCESS, MPI_INT,
                 &sub_array[0], ELEMENTS_PER_PROCESS, MPI_INT,
                 0, MPI_COMM_WORLD);
-    // std::cout << "#" << proc_id << ", sub_array: " << array_to_string(sub_array) << std::endl;
+   // std::cout << "#" << proc_id << ", sub_array: " << array_to_string(sub_array) << std::endl;
 
     //sort
     std::sort(sub_array.begin(), sub_array.end(), std::less<container::value_type>());
-    //std::cout << "#" << proc_id << ", sorted sub_array: " << array_to_string(sub_array) << std::endl;
+    // std::cout << "#" << proc_id << ", sorted sub_array: " << array_to_string(sub_array) << std::endl;
 
     //interprocess_sort()
     for(int i = 0; i < world_size; i++) {
@@ -210,7 +206,7 @@ int main(int argc, char** argv) {
                 //compare this process with left one. save greater part of the joined array.
                 compare_split_max(proc_id - 1, sub_array);
             }
-            // std::cout << "#" << proc_id << ", Odd exchange complete, i : " << i << std::endl;
+          //  std::cout << "#" << proc_id << ", Odd exchange complete, i : " << i << std::endl;
         }
         //even iteration (p0, p1), (p2, p3)
         else {
@@ -225,7 +221,7 @@ int main(int argc, char** argv) {
                 //compare this process with left one. save greater part of the joined array.
                 compare_split_max(proc_id - 1, sub_array);
             }
-            // std::cout << "#" << proc_id << ", Even exchange complete, i : " << i << std::endl;
+          //  std::cout << "#" << proc_id << ", Even exchange complete, i : " << i << std::endl;
         }
     }
 
@@ -236,13 +232,14 @@ int main(int argc, char** argv) {
     auto end_time = std::chrono::high_resolution_clock::now();
 
     if(proc_id == ROOT_RANK) {
-        // std::cout << "MPI sort: " << std::endl  << array_to_string(array) << std::endl;
+        std::cout << "MPI sort: " << std::endl  << array_to_string(array) << std::endl;
         std::cout << "Time for parallel sorting : " << duration_cast<std::chrono::milliseconds>(end_time-start_time).count() << "ms" << std::endl;
 
         start_time = std::chrono::high_resolution_clock::now();
         sequential_sort(array_copy);
       ///  std::sort(array_copy.begin(), array_copy.end(), std::less<container::value_type>());
         end_time = std::chrono::high_resolution_clock::now();
+        std::cout << "Non-MPI sort: " << std::endl  << array_to_string(array_copy) << std::endl;
         std::cout << "Time for standard sorting : " << duration_cast<std::chrono::milliseconds>(end_time-start_time).count() << "ms" << std::endl;
     }
     MPI_Finalize();

@@ -12,7 +12,7 @@ using namespace std::chrono;
 
 using container = std::vector<int>;
 
-const size_t ELEMENTS_PER_PROCESS = 100000;
+const size_t ELEMENTS_PER_PROCESS = 20;
 // const size_t ELEMENTS_PER_PROCESS = 500;
 
 const int ROOT_RANK = 0;
@@ -138,7 +138,7 @@ int main(int argc, char** argv) {
         //array = std::move(generate_array(ELEMENTS_PER_PROCESS * world_size));
         array = generate_array(ELEMENTS_PER_PROCESS * world_size);
         array_copy = array;
-        // std::cout << array_to_string(array) << std::endl;
+        std::cout << array_to_string(array) << std::endl;
     }
 
     auto start_time = std::chrono::high_resolution_clock::now();
@@ -196,12 +196,13 @@ int main(int argc, char** argv) {
     auto end_time = std::chrono::high_resolution_clock::now();
 
     if(proc_id == ROOT_RANK) {
-        // std::cout << "MPI sort: " << std::endl  << array_to_string(array) << std::endl;
+        std::cout << "MPI sort: " << std::endl  << array_to_string(array) << std::endl;
         std::cout << "Time for parallel sorting : " << duration_cast<std::chrono::milliseconds>(end_time-start_time).count() << "ms" << std::endl;
 
         start_time = std::chrono::high_resolution_clock::now();
         std::sort(array_copy.begin(), array_copy.end(), std::less<container::value_type>());
         end_time = std::chrono::high_resolution_clock::now();
+        std::cout << "Non-MPI sort: " << std::endl  << array_to_string(array_copy) << std::endl;
         std::cout << "Time for standart sorting : " << duration_cast<std::chrono::milliseconds>(end_time-start_time).count() << "ms" << std::endl;
     }
     MPI_Finalize();
