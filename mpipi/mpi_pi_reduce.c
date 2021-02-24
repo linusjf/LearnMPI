@@ -19,9 +19,12 @@
 
 void srandom(unsigned seed);
 double dboard(int darts);
-#define DARTS 50000 /* number of throws at dartboard */
-#define ROUNDS 100  /* number of times "darts" is iterated */
-#define MASTER 0    /* task ID of master task */
+/* number of throws at dartboard */
+#define DARTS 50000 
+/* number of times "darts" is iterated */
+#define ROUNDS 100
+/* task ID of master task */
+#define MASTER 0    
 
 int main(int argc, char *argv[]) {
   double homepi, /* value of pi calculated by current task */
@@ -30,9 +33,8 @@ int main(int argc, char *argv[]) {
       avepi;     /* average pi value for all iterations */
   int taskid,    /* task ID - also used as seed number */
       numtasks,  /* number of tasks */
-      rc,        /* return code */
       i;
-  MPI_Status status;
+  //MPI_Status status;
 
   /* Obtain number of tasks and task ID */
   MPI_Init(&argc, &argv);
@@ -60,7 +62,7 @@ int main(int argc, char *argv[]) {
      * - MPI_COMM_WORLD is the group of tasks that will participate.
      */
 
-    rc = MPI_Reduce(&homepi, &pisum, 1, MPI_DOUBLE, MPI_SUM, MASTER,
+    MPI_Reduce(&homepi, &pisum, 1, MPI_DOUBLE, MPI_SUM, MASTER,
                     MPI_COMM_WORLD);
 
     /* Master computes average for this iteration and all iterations */
