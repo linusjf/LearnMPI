@@ -15,8 +15,7 @@ if [ $? == 0 ];then #No Errors Detected
 	echo "COMPILE SUCCESS"
 	echo ---------Executing Program------------
     termux-elf-cleaner $output_file_name &> /dev/null 
-    mpirun --allow-run-as-root --hostfile hostfile -np $no_of_process $output_file_name
-	
+    mpirun --allow-run-as-root --hostfile ../hostfile -np $no_of_process $output_file_name
 else
 	echo "COMPILE ERROR"
 fi
