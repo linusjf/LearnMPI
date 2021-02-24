@@ -43,12 +43,11 @@ int main(int argc, char *argv[]) {
 
   /***** Master task only ******/
   if (taskid == MASTER) {
-
     /* Initialize the array */
     sum = 0;
     for (i = 0; i < ARRAYSIZE; i++) {
       data[i] = i * 1.0;
-      sum = sum + data[i];
+      sum += data[i];
     }
     printf("Initialized array sum = %e\n", sum);
     printf("numtasks= %d  chunksize= %d  leftover= %d\n", numtasks, chunksize,
@@ -94,31 +93,24 @@ int main(int argc, char *argv[]) {
   } /* end of master section */
 
   /***** Non-master tasks only *****/
-
   if (taskid > MASTER) {
-
     /* Receive my portion of array from the master task */
     source = MASTER;
     MPI_Recv(&offset, 1, MPI_INT, source, tag1, MPI_COMM_WORLD, &status);
     MPI_Recv(&data[offset], chunksize, MPI_DOUBLE, source, tag2, MPI_COMM_WORLD,
              &status);
-
     /* Do my part of the work */
     mysum = update(offset, chunksize, taskid);
-
     /* Send my results back to the master task */
     dest = MASTER;
     MPI_Send(&offset, 1, MPI_INT, dest, tag1, MPI_COMM_WORLD);
     MPI_Send(&data[offset], chunksize, MPI_DOUBLE, MASTER, tag2,
              MPI_COMM_WORLD);
-
     /* Use sum reduction operation to obtain final sum */
     MPI_Reduce(&mysum, &sum, 1, MPI_DOUBLE, MPI_SUM, MASTER, MPI_COMM_WORLD);
-
   } /* end of non-master */
 
   MPI_Finalize();
-
 } /* end of main */
 
 double update(int myoffset, int chunk, int myid) {
