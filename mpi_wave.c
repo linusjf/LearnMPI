@@ -21,9 +21,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef __STDC_WANT_LIBC_EXT1__
-#define __STDC_WANT_LIBC_EXT1__ 
-#endif
 
 #define MASTER 0
 #define TPOINTS 800
@@ -41,7 +38,7 @@ void init_line(void);
 void update(int left, int right);
 void output_master(void);
 void output_workers(void);
-extern void draw_wave(double *);
+//extern void draw_wave(double *);
 
 int taskid,              /* task ID */
     numtasks,            /* number of processes */
@@ -63,7 +60,7 @@ void init_master(void) {
   nsteps = 0;
   while ((nsteps < 1) || (nsteps > MAXSTEPS)) {
     printf("Enter number of time steps (1-%d): \n", MAXSTEPS);
-    scanf_s("%7s", tchar, 8);
+    scanf("%s", tchar);
     nsteps = atoi(tchar);
     if ((nsteps < 1) || (nsteps > MAXSTEPS))
       printf("Enter value between 1 and %d\n", MAXSTEPS);
@@ -189,7 +186,7 @@ void output_master(void) {
   printf("Click the EXIT button or use CTRL-C to quit\n");
 
   /* display results with draw_wave routine */
-  draw_wave(&results[0]);
+  //draw_wave(&results[0]);
 }
 
 /*  -------------------------------------------------------------------------
