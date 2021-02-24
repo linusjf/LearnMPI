@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
       dest, source,                /* to - from for message send-receive */
       left, right,                 /* neighbor tasks */
       msgtype,                     /* for message types */
-      rc = 1, start, end,              /* misc */
+      rc = 1, start, end,          /* misc */
       i, ix, iy, iz, it;           /* loop variables */
   MPI_Status status;
 
