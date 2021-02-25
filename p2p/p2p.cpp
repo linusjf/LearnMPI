@@ -19,31 +19,34 @@ int main(int argc, char **argv) {
    case 0:
     MPI_Send(&first_num, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
     MPI_Recv(&val, 1, MPI_INT, 4, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    std::cout << " process # " << rank << " : " << first_num + val << std::endl;
+    std::cout << " process # " << rank << " : " << first_num << " + " << val  << " = " << first_num + val << std::endl;
      break;
 
    case 1:
     MPI_Recv(&val, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     MPI_Send(&second_num, 1, MPI_INT, 2, 0, MPI_COMM_WORLD);
-    std::cout << " process # " << rank << " : " << second_num - val << std::endl;
+    std::cout << " process # " << rank << " : " << second_num << " - " << val  << " = " << second_num - val << std::endl;
      break;
 
   case 2:
     MPI_Send(&third_num, 1, MPI_INT, 3, 0, MPI_COMM_WORLD);
     MPI_Recv(&val, 1, MPI_INT, 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    std::cout << " process # " << rank << " : " << third_num * val << std::endl;
+    std::cout << " process # " << rank << " : " << third_num << " * " << val  << " = " << third_num *
+       val << std::endl;
      break;
 
   case 3:
     MPI_Recv(&val, 1, MPI_INT, 2, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     MPI_Send(&fourth_num, 1, MPI_INT, 4, 0, MPI_COMM_WORLD);
-    std::cout << " process # " << rank << " : " << fourth_num / val << std::endl;
+    std::cout << " process # " << rank << " : " << fourth_num << " / " << val  << " = " << fourth_num /
+       val << std::endl;
      break;
 
   case 4:
     MPI_Send(&fifth_num, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
     MPI_Recv(&val, 1, MPI_INT, 3, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    std::cout << " process # " << rank << " : " << fifth_num % val << std::endl;
+    std::cout << " process # " << rank << " : " << fifth_num << " % " << val  << " = " << fifth_num %
+       val << std::endl;
      break;
   }
   MPI_Finalize();
