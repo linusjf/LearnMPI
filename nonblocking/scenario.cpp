@@ -3,11 +3,13 @@
 #include <mpi.h>
 #include <unistd.h>
 
+using namespace std;
+
 void print_buffer(int buffer[], int buffer_size) {
-  std::cout << "{ ";
+  cout << "{ ";
   for (int i = 0; i < buffer_size; i++)
-    std::cout << buffer[i] << " ";
-  std::cout << " } " << std::endl;
+    cout << buffer[i] << " ";
+  cout << " } " << endl;
 }
 
 void play_nonblocking_scenario(int buffer[], int buffer_size, int rank) {
@@ -23,7 +25,7 @@ void play_nonblocking_scenario(int buffer[], int buffer_size, int rank) {
   // simulate working
   if (rank == 0) {
     sleep(3);
-    std::cout << "First send for process # " << rank << std::endl;
+    cout << "First send for process # " << rank << endl;
     MPI_Isend(buffer, buffer_size, MPI_INT, 1, 0, MPI_COMM_WORLD, &request);
     double time_left = 6000.0;
     while (time_left > 0.0 && request_finished != 0) {
@@ -35,7 +37,7 @@ void play_nonblocking_scenario(int buffer[], int buffer_size, int rank) {
       MPI_Wait(&request, &status);
     for (int i = 0; i < buffer_size; ++i)
       buffer[i] = -i;
-    std::cout << "Second send for process # " << rank << std::endl;
+    cout << "Second send for process # " << rank << endl;
     MPI_Isend(buffer, buffer_size, MPI_INT, 1, 1, MPI_COMM_WORLD, &request);
     request_finished = 0;
     time_left = 3000.0;
@@ -48,12 +50,12 @@ void play_nonblocking_scenario(int buffer[], int buffer_size, int rank) {
       MPI_Wait(&request, &status);
   } else {
     sleep(5);
-    std::cout << "First receive for process # " << rank << std::endl;
+    cout << "First receive for process # " << rank << endl;
     MPI_Irecv(buffer, buffer_size, MPI_INT, 0, 0, MPI_COMM_WORLD, &request);
     MPI_Wait(&request, &status);
     print_buffer(buffer, buffer_size);
     sleep(3);
-    std::cout << "Second receive for process # " << rank << std::endl;
+    cout << "Second receive for process # " << rank << endl;
     MPI_Irecv(buffer, buffer_size, MPI_INT, 0, 1, MPI_COMM_WORLD, &request);
     MPI_Wait(&request, &status);
     print_buffer(buffer, buffer_size);
@@ -62,8 +64,8 @@ void play_nonblocking_scenario(int buffer[], int buffer_size, int rank) {
   double final_time;
   MPI_Reduce(&time, &final_time, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
   if (rank == 0)
-    std::cout << "Total time for blocking scenario : " << final_time
-              << std::endl;
+    cout << "Total time for non-blocking scenario : " << final_time
+              << endl;
 }
 
 int main(int argc, char **argv) {
