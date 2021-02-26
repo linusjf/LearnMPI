@@ -86,6 +86,7 @@ int main(int argc, char *argv[]) {
     prtdat(NXPROB, NYPROB, u, "initial.dat");
 
     /* Distribute work to workers.  Must first figure out how many rows to */
+  std::cout << "Waiting for process # " << rank << std::endl;
     /* send and what to do with extra rows.  */
     averow = NXPROB / numworkers;
     extra = NXPROB % numworkers;
