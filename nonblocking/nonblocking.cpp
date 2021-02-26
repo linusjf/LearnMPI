@@ -1,6 +1,6 @@
+#include <iostream>
 #include <mpi.h>
 #include <stdio.h>
-#include <iostream>
 
 int main(int argc, char **argv) {
   int numtasks, rank, next, prev, buf[2], tag1 = 1, tag2 = 2;
@@ -20,7 +20,8 @@ int main(int argc, char **argv) {
   if (rank == (numtasks - 1))
     next = 0;
 
-  std::cout << "Starting sends and receives for process # " << rank << std::endl;
+  std::cout << "Starting sends and receives for process # " << rank
+            << std::endl;
   // post non-blocking sends and receives
   MPI_Irecv(&buf[0], 1, MPI_INT, prev, tag1, MPI_COMM_WORLD, &reqs[0]);
   MPI_Irecv(&buf[1], 1, MPI_INT, next, tag2, MPI_COMM_WORLD, &reqs[1]);
