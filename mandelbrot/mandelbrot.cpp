@@ -33,6 +33,10 @@ void compute_mandelbrot(double *points, int n_pts, int mset[]) {
         break;
       iteration++;
     }
+    if (iteration == cutoff)
+      mset[i] = -1;
+    else 
+      mset[i] = iteration;
   }
 }
 

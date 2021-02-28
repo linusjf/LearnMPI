@@ -33,6 +33,10 @@ void compute_mandelbrot(double *points, int n_pts, int mset[]) {
         break;
       iteration++;
     }
+    if (iteration == cutoff)
+      mset[i] = -1;
+    else 
+      mset[i] = iteration;
   }
 }
 
@@ -73,9 +77,12 @@ int main(int argc, char **argv) {
               MPI_COMM_WORLD);
 
   MPI_Barrier(MPI_COMM_WORLD);
-  int npts = p_count * p_count;
+  int npts = (p_count * p_count) / (size * size);
   int mset[npts];
-  compute_mandelbrot(points, npts, mset);
+  int sub_mset[npts/size];
+  int total_pts = npts * size * size;
+  compute_mandelbrot(sub_points, npts, sub_mset);
+
   MPI_Barrier(MPI_COMM_WORLD);
   if (rank == 0) {
     for (int yp = 0; yp < p_count; yp++) {
