@@ -114,6 +114,7 @@ int main(int argc, char *argv[]) {
   MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
   MPI_Comm_rank(MPI_COMM_WORLD, &myid);
+  printf("Number of procs:  %d\n", numprocs);
 
   /* Assign storage and initialize values */
   numthrds = MAXTHRDS;
