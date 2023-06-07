@@ -1,4 +1,6 @@
-#MPI
+#LearnMPI
+
+[![Hits-of-Code](https://hitsofcode.com/github/linusjf/LearnMPI?branch=main)](https://hitsofcode.com/github/linusjf/LearnMPI/view?branch=main)
 
 ##OpenMPI examples
 

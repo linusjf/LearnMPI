@@ -3,7 +3,7 @@
 
 #Compiled Object files
 *.slo
-*.lo 
+*.lo
 *.o
 *.obj
 
@@ -12,7 +12,7 @@
 *.pch
 
 #Compiled Dynamic libraries
-*.so 
+*.so
 *.dylib
 *.dll
 
@@ -22,7 +22,7 @@
 
 #Compiled Static libraries
 *.lai
-*.la 
+*.la
 *.a
 *.lib
 
@@ -33,3 +33,6 @@
 
 #output
 *.dat
+
+#commits
+commit.txt
